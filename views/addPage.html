@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Document</title>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+
+        {{include "./include/header.html"}}
+
+        {{include "./include/side.html"}}
+
+        <div class="layui-body" style='padding-top: 20px;'>
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" required lay-verify="required" placeholder="输入分类名称"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {{include "./include/footer.html"}}
+
+    </div>
+</body>
+<script src="/layui/layui.all.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            // layer.msg(JSON.stringify(data.field));
+
+            $.ajax({
+                type: 'post',
+                url: '/cartoonAdd',
+                data: data.field,
+                success: function (res) {
+                    if (res.statusCode === 0) {
+                        layer.msg('操作成功', {
+                            time: 1000,
+                            end: function () {
+                                location.href = '/cartoonList'
+                            }
+                        })
+                    }
+                }
+            })
+            return false
+        });
+    });
+</script>
+
+</html>

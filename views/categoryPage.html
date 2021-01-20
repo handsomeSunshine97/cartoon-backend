@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Document</title>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+
+        {{include "./include/header.html"}}
+
+        {{include "./include/side.html"}}
+
+        <div class="layui-body">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>分类列表</th>
+                        <th>漫画数量</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+        {{include "./include/footer.html"}}
+
+    </div>
+</body>
+<script src="/layui/layui.all.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script>
+    function renderIndex() {
+        $.ajax({
+            url: '/queryCategory',
+            type: 'get',
+            success: function (response) {
+                let tbodyStr = ''
+                response.forEach((value, index) => {
+                    tbodyStr += `<tr>
+                        <th>${index + 1}</th>
+                        <th data_id=${value.cateId}>${value.name}</th>
+                        <th>${value.count}</th>
+                        <th><button type="button" class="layui-btn layui-btn-warm" id = 'edit'>编辑</button>
+                            <button type="button" class="layui-btn layui-btn-danger" id = 'isDel'>删除</button></th>
+                    </tr>`
+                })
+                $('tbody').html(tbodyStr)
+            }
+        })
+    }
+    renderIndex()
+
+    $('tbody').on('click', '#isDel', function () {
+        var that = this
+        let cateId = $(this).parents('tr').children().eq(1).attr('data_id')
+        layer.confirm('确认删除？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: '/deleteCategory',
+                type: 'post',
+                data: { cateId },
+                success: function (response) {
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1000
+                    });
+                    renderIndex()
+                }
+            })
+        }, function () {
+
+        });
+    })
+
+    $('tbody').on('click','#edit',function(){
+        let data_id = $(this).parents('tr').children().eq(1).attr('data_id')
+       location.href = `/editPage?data_id=${data_id}`
+    })
+</script>
+
+</html>
