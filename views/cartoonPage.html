@@ -19,7 +19,7 @@
 
             <table class="layui-hide" id="test" lay-filter="test"></table>
 
-            
+
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -55,9 +55,18 @@
                 , { field: 'cover', title: '封面地址', width: 120 }
                 , { field: 'cartoonURl', title: '漫画地址', width: 120 }
                 // , { field: 'tagID', title: '所属分类', width: 50 }
-                , { field: 'status', title: '状态', width: 60 }
-                , { field: 'lastUpdateTime', title: '最近更新时间', width: 150 }
-                , { field: 'publishTime', title: '发布时间', width: 150 }
+                , {
+                    field: 'status', title: '状态', width: 80, templet: function (item) {
+                        statusMap = {
+                            '0':'已发布',
+                            '1':'更新中',
+                            '2':'审核中'
+                        }
+                        return statusMap[item.status]
+                    }
+                }
+                , { field: 'lastUpdateTime', title: '最近更新时间', width: 140 }
+                , { field: 'publishTime', title: '发布时间', width: 140 }
                 , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
             ]]
             , page: true
