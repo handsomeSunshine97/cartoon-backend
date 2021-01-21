@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const listController = require('../controller/listController.js')
+const carController = require('../controller/carController.js')
 
 
 router.get(/^\/$|^\/admin$|^\/index$/, (request, response) => {
@@ -23,4 +24,7 @@ router.post('/querySingle',listController.postQuerySingle)
 
 router.post('/editName',listController.postEditName)
 
+router.get('/cartoonPage',carController.getCartoonPage)
+
+router.get('/cartoonInfo',carController.getCartoonInfo)
 module.exports = router
