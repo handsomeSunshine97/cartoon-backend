@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Document</title>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+
+        {{include "./include/header.html"}}
+
+        {{include "./include/side.html"}}
+
+        <div class="layui-body" style='padding-top: 20px;'>
+
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+
+            
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+              </script>
+        </div>
+
+
+        {{include "./include/footer.html"}}
+
+    </div>
+
+</body>
+<script src="/layui/layui.all.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+<script>
+    layui.use(['element', 'table'], function () {
+        var element = layui.element;
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            , url: '/cartoonInfo'
+            , toolbar: '#toolbarDemo'
+            , title: '用户数据表'
+            , totalRow: true
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'ID', title: 'ID', width: 60, fixed: 'left', sort: true, }
+                , { field: 'title', title: '名称', width: 150 }
+                , { field: 'author', title: '作者', width: 150 }
+                , { field: 'content', title: '内容', width: 180 }
+                , { field: 'cover', title: '封面地址', width: 120 }
+                , { field: 'cartoonURl', title: '漫画地址', width: 120 }
+                // , { field: 'tagID', title: '所属分类', width: 50 }
+                , { field: 'status', title: '状态', width: 60 }
+                , { field: 'lastUpdateTime', title: '最近更新时间', width: 150 }
+                , { field: 'publishTime', title: '发布时间', width: 150 }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+            ]]
+            , page: true
+        });
+    });
+</script>
+
+</html>
