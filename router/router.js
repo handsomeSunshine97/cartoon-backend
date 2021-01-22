@@ -27,4 +27,8 @@ router.post('/editName',listController.postEditName)
 router.get('/cartoonPage',carController.getCartoonPage)
 
 router.get('/cartoonInfo',carController.getCartoonInfo)
+
+router.get('/cartoonAddPage',carController.getCartoonAddPage)
+
+router.post('/cartoon_Add',carController.postCartoonAdd)
 module.exports = router

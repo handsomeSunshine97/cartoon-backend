@@ -52,4 +52,13 @@ connection.querySingle = function (sql) {
     })
 }
 
+connection.insertInto = function (sql,bind) {
+    return new Promise((resolve, reject) => {
+        connection.query(sql,bind,(error,result)=>{
+            if(error) reject(error)
+            resolve(result)
+        })
+    })
+}
+
 module.exports = connection

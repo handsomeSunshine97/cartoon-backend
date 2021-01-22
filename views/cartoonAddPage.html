@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Document</title>
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+
+        {{include "./include/header.html"}}
+
+        {{include "./include/side.html"}}
+
+        <div class="layui-body" style='padding-top: 20px;'>
+            <form class="layui-form" action="">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">title:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required lay-verify="required" placeholder="请输入标题"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">author:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="author" required lay-verify="required" placeholder="请输入作者"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">cartoonURl:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="cartoonURl" required lay-verify="required" placeholder="请输入漫画地址"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">cover:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="cover" required lay-verify="required" placeholder="请输入封面地址"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">group:</label>
+                    <div class="layui-input-block">
+                        <select name="tagID" lay-verify="required">
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">status:</label>
+                    <div class="layui-input-block" id="condition">
+                        <input type="radio" name="status" value="0" title="已发布">
+                        <input type="radio" name="status" value="1" title="更新中">
+                        <input type="radio" name="status" value="2" title="审核中" checked>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" id="isShow" style="display: none;">
+                    <label class="layui-form-label">publishTime:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="publishTime" placeholder="请输入发布时间" autocomplete="off"
+                            class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">content:</label>
+                    <div class="layui-input-block">
+                        <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {{include "./include/footer.html"}}
+
+    </div>
+</body>
+<script src="/layui/layui.all.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+<script>
+
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        $.ajax({
+            type: 'get',
+            url: '/queryCategory',
+            success: function (res) {
+                let options = '<option value="">请选择</option>'
+                res.forEach(item => {
+                    options += `<option value="${item.cateId}">${item.name}</option>`
+                    $('select[name="tagID"]').html(options)
+                    form.render('select')
+                })
+            }
+        })
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            // layer.msg(JSON.stringify(data.field));
+            $.ajax({
+                type: 'post',
+                url: '/cartoon_Add',
+                data: data.field,
+                success(res) {
+                    if (res.statusCode === 0) {
+                        layer.msg('添加成功', {
+                            time: 800,
+                            end() {
+                                location.href = '/cartoonPage'
+                            }
+                        })
+                    }
+                }
+            })
+            return false;
+        });
+    });
+
+    $('#condition > div').on('click', function () {
+        $(this).index() !== 1 ? $('#isShow').css('display', 'none') : $('#isShow').css('display', 'block')
+    })
+</script>
+
+</html>

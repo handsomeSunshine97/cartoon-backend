@@ -10,20 +10,20 @@
 
 <body class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
-
         {{include "./include/header.html"}}
 
         {{include "./include/side.html"}}
+        
+        <div class="layui-body">
 
-        <div class="layui-body" style='padding-top: 20px;'>
-
+            <a href="/cartoonAddPage" class="layui-btn"  style="position: absolute; left: 10px; top: 10px; z-index: 999;" >添加漫画</a>
+            
             <table class="layui-hide" id="test" lay-filter="test"></table>
-
 
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-              </script>
+            </script>
         </div>
 
 
@@ -36,15 +36,14 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
 
 <script>
-    layui.use(['element', 'table'], function () {
-        var element = layui.element;
+    layui.use( 'table', function () {
         var table = layui.table;
 
         table.render({
             elem: '#test'
             , url: '/cartoonInfo'
             , toolbar: '#toolbarDemo'
-            , title: '用户数据表'
+            , title: '漫画数据表'
             , totalRow: true
             , cols: [[
                 { type: 'checkbox', fixed: 'left' }
