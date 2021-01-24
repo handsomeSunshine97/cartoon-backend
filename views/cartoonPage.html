@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/public/css/lightbox.css">
     <title>Document</title>
 </head>
 
@@ -13,32 +14,23 @@
         {{include "./include/header.html"}}
 
         {{include "./include/side.html"}}
-        
+
         <div class="layui-body">
-
-            <a href="/cartoonAddPage" class="layui-btn"  style="position: absolute; left: 10px; top: 10px; z-index: 999;" >添加漫画</a>
-            
+            <a href="/cartoonAddPage" class="layui-btn"
+                style="position: absolute; left: 10px; top: 10px; z-index: 999;">添加漫画</a>
             <table class="layui-hide" id="test" lay-filter="test"></table>
-
-            <script type="text/html" id="barDemo">
-                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-            </script>
         </div>
 
-
         {{include "./include/footer.html"}}
-
     </div>
 
 </body>
 <script src="/layui/layui.all.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
-
+<script src="/public/js/lightbox-plus-jquery.min.js"></script>
 <script>
-    layui.use( 'table', function () {
+    layui.use('table', function () {
         var table = layui.table;
-
         table.render({
             elem: '#test'
             , url: '/cartoonInfo'
@@ -49,27 +41,163 @@
                 { type: 'checkbox', fixed: 'left' }
                 , { field: 'ID', title: 'ID', width: 60, fixed: 'left', sort: true, }
                 , { field: 'title', title: '名称', width: 150 }
-                , { field: 'author', title: '作者', width: 150 }
-                , { field: 'content', title: '内容', width: 180 }
-                , { field: 'cover', title: '封面地址', width: 120 }
+                , { field: 'author', title: '作者', width: 100 }
+                // , { field: 'content', title: '内容', width: 180 }
+                , {
+                    field: 'cover', title: '封面地址', width: 120, templet: ({ cover, title }) => {
+                        let imgStr = `<a class="example-image-link" href="${cover}" data-lightbox="example-1" data-title="${title}">
+                        <img class="example-image" src="${cover}" alt="暂无图片" />
+                    </a>`;
+                        return imgStr;
+                    }
+                }
                 , { field: 'cartoonURl', title: '漫画地址', width: 120 }
-                // , { field: 'tagID', title: '所属分类', width: 50 }
+                , {
+                    field: 'tagID', title: '所属分类', width: 100, templet: function (item) {
+                        return item.name
+                    }
+                }
                 , {
                     field: 'status', title: '状态', width: 80, templet: function (item) {
                         statusMap = {
-                            '0':'已发布',
-                            '1':'更新中',
-                            '2':'审核中'
+                            '0': '<a class="layui-btn layui-btn-xs " lay-event="edit">已发布</a>',
+                            '1': '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">更新中</a>',
+                            '2': '<a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">审核中</a>',
+                            '3': '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="edit">已下架</a>'
                         }
                         return statusMap[item.status]
                     }
                 }
-                , { field: 'lastUpdateTime', title: '最近更新时间', width: 140 }
-                , { field: 'publishTime', title: '发布时间', width: 140 }
-                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+                , { field: 'lastUpdateTime', title: '最近更新时间', width: 120 }
+                , { field: 'publishTime', title: '发布时间', width: 120 }
+                , {
+                    fixed: 'right', title: '操作', templet() {
+                        let temStr = `<a class="layui-btn layui-btn-xs" lay-event="show">查看内容</a> 
+                        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
+                                    <a class="layui-btn layui-btn-xs layui-bg-orange" lay-event="verify">修改状态</a>
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>`
+                        return temStr;
+                    }
+                }
             ]]
             , page: true
         });
+
+
+        table.on('tool(test)', function (obj) {
+            let { data } = obj
+            switch (obj.event) {
+                case 'show':
+                    showContent(data)
+                    break;
+                case 'verify':
+                    verifyStatus(data.ID, table)
+                    break;
+                case 'edit':
+                    editCartoon(data.ID)
+                    break;
+                case 'del':
+                    delCartoon(data.ID)
+                    break;
+            };
+        })
+
+        // 监听行单击事件
+        // table.on('rowDouble(test)', function (obj) {
+        // obj.tr[0].cells[4].onclick = function () {
+        //     layer.open({
+        //         type: 1,
+        //         skin: 'layui-layer-rim', //加上边框
+        //         area: ['600px', '510px'],
+        //         content: `<img src=${obj.data.cover} style="width:600px">`
+        //     });
+        //       }
+        // });
+
+        // 双击不选中文字
+        document.body.onselectstart = function () {
+            return false
+        }
+
+        function showContent({ content }) {
+            layer.open({
+                title: '内容',
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['1000px', '680px'], //宽高
+                content: `<div style='padding:10px 20px'> ${content} </div>`
+            });
+        }
+
+        function verifyStatus(ID) {
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '240px'], //宽高
+                content: ` <div style="text-align: center">
+                                <input id='id' type='hidden' value=${ID}>
+                                <h2 style="padding:30px 0 70px;">状态修改</h2>
+                                <button value="0" class="layui-btn">已发布</button>
+                                <button value="1" class="layui-btn layui-btn-normal">更新中</button>
+                                <button value="2" class="layui-btn layui-btn-warm">审核中</button>
+                                <button value="3" class="layui-btn layui-btn-danger">已下架</button>
+                            </div>  
+                            <script>
+                                var table = layui.table
+                            $('button').on('click',function(){
+                                let status = $(this).val()-0
+                                let ID = $('#id').val()
+                                $.ajax({
+                                    url:'/modifyStatus',
+                                    type:'get',
+                                    data:{
+                                        status,
+                                        ID
+                                    },
+                                    success:function({statusCode}){
+                                        if(statusCode === 0){
+                                            layer.msg('修改成功',{
+                                                time:1000,
+                                                end(){
+                                                    layer.closeAll('page')
+                                                    table.reload('test')
+                                                }
+                                            });
+                                        }
+                                    }
+                                })
+                            })
+                            <\/script>
+                        `
+            });
+        }
+
+        function editCartoon(carID) {
+            location.href = '/cartoonEdit?data_id=' + carID
+        }
+
+        function delCartoon(carID) {
+            layer.confirm('确认删除', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/delCartoon',
+                    data: `ID=${carID}`,
+                    type: 'post',
+                    success(res) {
+                        if (res.statusCode === 0) {
+                            layer.msg('删除成功', {
+                                time: 1000,
+                                end() {
+                                    table.reload('test')
+                                }
+                            })
+                        }
+                    }
+                })
+            });
+        }
+
     });
 </script>
 

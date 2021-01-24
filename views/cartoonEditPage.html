@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/layui/css/layui.css">
     <title>Document</title>
+    <style>
+
+    </style>
 </head>
 
 <body class="layui-layout-body">
@@ -132,8 +135,14 @@
                 res.forEach(item => {
                     options += `<option value="${item.cateId}">${item.name}</option>`
                     $('select[name="tagID"]').html(options)
+                    // location.href 带有id时执行回显
                     form.render('select')
                 })
+
+                let id = location.href.includes('?data_id=')
+                if (id) {
+                    cartoonEcho()
+                }
             }
         })
 
@@ -152,14 +161,17 @@
         //监听提交
         form.on('submit(formDemo)', function (data) {
             // layer.msg(JSON.stringify(data.field));
+            const reg = /data_id=(.*)&?$/
+            const data_id = [...reg.exec(location.href)][1]
             data.field.content = editor.txt.html()
+            data.field.ID = data_id
             $.ajax({
                 type: 'post',
-                url: '/cartoon_Add',
+                url: '/cartoon_update',
                 data: data.field,
                 success(res) {
                     if (res.statusCode === 0) {
-                        layer.msg('添加成功', {
+                        layer.msg('修改成功', {
                             time: 800,
                             end() {
                                 location.href = '/cartoonPage'
@@ -171,10 +183,42 @@
             return false;
         });
 
-        $('#condition > div').on('click', function () {
-            $(this).index() === 5 ? $('#isShow').hide() : $('#isShow').show()
-        })
+        //数据回显  
+        function cartoonEcho() {
+            const reg = /data_id=(.*)&?$/
+            const data_id = [...reg.exec(location.href)][1]
+            $.ajax({
+                type: 'get',
+                url: '/cartoonEcho',
+                data: { data_id },
+                success({ statusCode, data }) {
+                    if (statusCode === 0) {
+                        $('#hasCover img').attr('src', data[0].cover)
+                        $('#hasCover').show()
+                        editor.txt.html(data[0].content)
+                        data[0].publishTime && $('#isShow').show()
+                        form.val("formTest", {
+                            // "title": data[0].title
+                            // , "author": data[0].author
+                            // , "cartoonURl": data[0].cartoonURl
+                            // , "status": data[0].status
+                            // , "publishTime": data[0].publishTime
+                            // , "tagID": data[0].tagID
+                            ...data[0]
+                        });
+                    }
+                }
+            })
+        }
+
+
+    });
+
+    $('#condition').on('click' ,'div', function () {
+        $(this).index() === 5 ? $('#isShow').hide() : $('#isShow').show()
     })
+
+
 </script>
 
 </html>

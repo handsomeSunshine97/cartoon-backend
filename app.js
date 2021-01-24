@@ -7,6 +7,7 @@ const router = require('./router/router.js')
 // 开放静态资源
 app.use('/layui', express.static('./public/layui'))
 app.use('/public', express.static('./public'))
+app.use('/uploads', express.static('./uploads'))
 
 // request.body 中间件
 app.use(express.json())
