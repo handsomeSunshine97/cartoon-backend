@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
-
 const listController = require('../controller/listController.js')
 const carController = require('../controller/carController.js')
+const userController = require('../controller/userController.js')
 
 router.get(/^\/$|^\/admin$|^\/index$/, (request, response) => {
     response.render('index.html')
@@ -44,6 +44,9 @@ router.get('/cartoonEcho', carController.getCartoonEcho)
 
 router.post('/cartoon_update', carController.postCartoon_update)
 
-router.get('/modifyStatus',carController.modifyStatus)
+router.get('/modifyStatus', carController.modifyStatus)
 
+router.get('/login',userController.getLoginPage)
+
+router.post('/loginCheck',userController.postLoginCheck)
 module.exports = router

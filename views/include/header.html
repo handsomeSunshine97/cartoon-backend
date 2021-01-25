@@ -17,9 +17,8 @@
     <ul class="layui-nav layui-layout-right">
         <li class="layui-nav-item">
             <a href="javascript:;">
-                <img  src="/public/images/主图.jpg"
-                    class="layui-nav-img">
-                英俊阳光
+                <img src="/public/images/主图.jpg" class="layui-nav-img">
+                <span id="username"></span>
             </a>
             <dl class="layui-nav-child">
                 <dd><a href="">基本资料</a></dd>
@@ -29,3 +28,7 @@
         <li class="layui-nav-item"><a href="">退了</a></li>
     </ul>
 </div>
+
+<script>
+    document.getElementById('username').innerHTML = localStorage.getItem('username')
+</script>
