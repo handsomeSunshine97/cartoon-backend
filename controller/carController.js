@@ -94,4 +94,10 @@ carController.modifyStatus = async (request, response) => {
     }
     return response.json({ statusCode: 10001 })
 }
+
+carController.queryCartoonCounts = async (request, response) => {
+    let sql =` select count(*) as counts,t2.cateId,t2.name from cartoon t1 left join categorytable t2 on t1.tagID=t2.cateId group by t2.cateId;`
+    let result = await connection.querySingle(sql)
+    response.json(result)
+}
 module.exports = carController

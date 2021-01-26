@@ -16,6 +16,7 @@
         {{include "./include/side.html"}}
 
         <div class="layui-body">
+            <div id="main" style="width: 600px;height:400px;"></div>
         </div>
 
         {{include "./include/footer.html"}}
@@ -23,6 +24,53 @@
     </div>
 </body>
 <script src="/layui/layui.all.js"></script>
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+<script src="/public/js/jquery.js"></script>
+<script type="text/javascript">
+
+
+    $.ajax({
+        type: 'get',
+        url: '/queryCartoonCounts',
+        success(res) {
+            let name = []
+            let counts = []
+            res.forEach(item => {
+                if(item.name == null){
+                    item.name = '未分类'
+                }
+                name.push(item.name)
+                counts.push(item.counts)
+            })
+            renderEcharts(name, counts)
+        }
+    })
+
+
+    function renderEcharts(name, counts) {
+        var myChart = echarts.init(document.getElementById('main'));
+        var option = {
+            title: {
+                text: '第一个 ECharts 实例'
+            },
+            tooltip: {},
+            legend: {
+                data: ['漫画分类']
+            },
+            xAxis: {
+                data: name
+            },
+            yAxis: {},
+            series: [{
+                name: '总数',
+                type: 'bar',
+                data: counts
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    }
+</script>
 
 
 </html>

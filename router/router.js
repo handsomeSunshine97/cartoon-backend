@@ -26,6 +26,7 @@ router.post('/querySingle', listController.postQuerySingle)
 
 router.post('/editName', listController.postEditName)
 
+
 router.get('/cartoonPage', carController.getCartoonPage)
 
 router.get('/cartoonInfo', carController.getCartoonInfo)
@@ -46,7 +47,9 @@ router.post('/cartoon_update', carController.postCartoon_update)
 
 router.get('/modifyStatus', carController.modifyStatus)
 
-router.get('/login',userController.getLoginPage)
+router.get('/queryCartoonCounts', carController.queryCartoonCounts)
 
-router.post('/loginCheck',userController.postLoginCheck)
+router.get('/login', userController.getLoginPage)
+
+router.post('/loginCheck', userController.postLoginCheck)
 module.exports = router
