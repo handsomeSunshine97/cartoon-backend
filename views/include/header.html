@@ -1,12 +1,12 @@
 <div class="layui-header">
-    <div class="layui-logo">layui 后台布局</div>
+    <a href="/"><div class="layui-logo">layui 后台布局</div></a>
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-left">
         <li class="layui-nav-item"><a href="">控制台</a></li>
         <li class="layui-nav-item"><a href="">商品管理</a></li>
         <li class="layui-nav-item"><a href="">用户</a></li>
         <li class="layui-nav-item">
-            <a href="javascript:;">其它系统</a>
+            <a href="javascript:;">其它系统</a> 
             <dl class="layui-nav-child">
                 <dd><a href="">邮件管理</a></dd>
                 <dd><a href="">消息管理</a></dd>
@@ -25,10 +25,32 @@
                 <dd><a href="">安全设置</a></dd>
             </dl>
         </li>
-        <li class="layui-nav-item"><a href="">退了</a></li>
+        <li class="layui-nav-item" id='loginOut'><a href="javaScript:;">退出登录</a></li>
     </ul>
 </div>
-
+<script src="/public/layui/layui.all.js"></script>
 <script>
     document.getElementById('username').innerHTML = localStorage.getItem('username')
+    let layer = layui.layer
+    let loginOut = document.getElementById('loginOut')
+    loginOut.onclick = function () {
+        layer.confirm('是否退出登录', {
+            btn: ['确认', '取消'] //按钮
+        }, function () {
+            const xhr = new XMLHttpRequest()
+            xhr.open('get', '/loginOut')
+            xhr.responseType ='json'
+            xhr.send()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        if (xhr.response.statusCode == 0) {
+                            localStorage.clear()
+                            location.href = '/login'
+                        }
+                    }
+                }
+            }
+        });
+    }
 </script>

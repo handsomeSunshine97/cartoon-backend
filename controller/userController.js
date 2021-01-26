@@ -16,10 +16,15 @@ userController.postLoginCheck = async (request, response) => {
     if (result.length) {
         let userInfo = result[0]
         request.session.userInfo = userInfo
-        return response.json({ statusCode: 0})
+        return response.json({ statusCode: 0 })
     }
     return response.json({ statusCode: 1001 })
 }
 
-
+userController.getLoginOut = (request, response) => {
+    request.session.destroy((error) => {
+        if (error) throw error
+        response.json({ statusCode: 0 })
+    })
+}
 module.exports = userController

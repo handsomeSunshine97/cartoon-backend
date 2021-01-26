@@ -8,10 +8,13 @@ carController.getCartoonPage = (request, response) => {
 }
 
 carController.getCartoonInfo = async (request, response) => {
-    let { page, limit } = request.query
+    let { page, limit, keyword, selectStatus } = request.query
+    let where = 'where 1'
+    keyword && (where += ' and t1.title like "%' + keyword + '%"')
+    selectStatus && (where += ' and t1.status=' + selectStatus)
     let sqlCount = `select count(*) as count from cartoon;`
     let limitStart = (page - 1) * limit
-    let sql = `select t1.*,t2.name from cartoon t1 left join categorytable t2 on t1.tagID=t2.cateId order by ID desc limit ${limitStart},${limit}`
+    let sql = `select t1.*,t2.name from cartoon t1 left join categorytable t2 on t1.tagID=t2.cateId ${where} order by ID desc limit ${limitStart},${limit}`
     let p1 = connection.querySingle(sqlCount)
     let p2 = connection.querySingle(sql)
     let result = await Promise.all([p1, p2])
@@ -80,8 +83,16 @@ carController.getCartoonEcho = async (request, response) => {
 
 carController.postCartoon_update = async (request, response) => {
     let { ID, title, author, cartoonURl, cover, tagID, status, content } = request.body
-    let sql = `update cartoon set title='${title}',author='${author}',cartoonURl='${cartoonURl}',cover='${cover}',tagID=${tagID},status=${status},content='${content}',lastUpdateTime=now() where ID=${ID};`
-    let result = await connection.querySingle(sql)
+    let sql1 = `select cover from cartoon where ID=${ID}`
+    let sql2 = `update cartoon set title='${title}',author='${author}',cartoonURl='${cartoonURl}',cover='${cover}',tagID=${tagID},status=${status},content='${content}',lastUpdateTime=now() where ID=${ID};`
+    let p1 = connection.querySingle(sql1)
+    let p2 = connection.querySingle(sql2)
+    let [lodCover, result] = await Promise.all([p1, p2])
+    if (lodCover[0].cover !== cover) {
+        fs.unlink('./' + lodCover[0].cover, (err) => {
+            if (err) throw err;
+        })
+    }
     result.affectedRows && response.json({ statusCode: 0 })
 }
 
@@ -96,7 +107,7 @@ carController.modifyStatus = async (request, response) => {
 }
 
 carController.queryCartoonCounts = async (request, response) => {
-    let sql =` select count(*) as counts,t2.cateId,t2.name from cartoon t1 left join categorytable t2 on t1.tagID=t2.cateId group by t2.cateId;`
+    let sql = ` select count(*) as counts,t2.cateId,t2.name from cartoon t1 left join categorytable t2 on t1.tagID=t2.cateId group by t2.cateId;`
     let result = await connection.querySingle(sql)
     response.json(result)
 }

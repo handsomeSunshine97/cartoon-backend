@@ -52,4 +52,7 @@ router.get('/queryCartoonCounts', carController.queryCartoonCounts)
 router.get('/login', userController.getLoginPage)
 
 router.post('/loginCheck', userController.postLoginCheck)
+
+router.get('/loginOut', userController.getLoginOut)
+
 module.exports = router

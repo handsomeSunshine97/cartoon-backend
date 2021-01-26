@@ -34,7 +34,7 @@ app.use(session(options))
 //防止翻墙
 app.use(function (request, response, next) {
     let path = request.path
-    let arr = ['/login', '/loginCheck']
+    let arr = ['/login', '/loginCheck','/loginOut']
     if (arr.includes(path)) {
         next();
     } else {

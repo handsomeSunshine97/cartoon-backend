@@ -15,8 +15,8 @@
 
         {{include "./include/side.html"}}
 
-        <div class="layui-body">
-            <div id="main" style="width: 600px;height:400px;"></div>
+        <div class="layui-body" style="display: flex;justify-content: center;align-items: center;">
+            <div id="main" style="width: 800px;height:600px;"></div>
         </div>
 
         {{include "./include/footer.html"}}
@@ -33,41 +33,66 @@
         type: 'get',
         url: '/queryCartoonCounts',
         success(res) {
-            let name = []
-            let counts = []
+            let data = []
             res.forEach(item => {
-                if(item.name == null){
-                    item.name = '未分类'
+                if (item.name == null) {
+                    return
                 }
-                name.push(item.name)
-                counts.push(item.counts)
+                let a = {}
+                a.value = item.counts
+                a.name = item.name
+                data.push(a)
             })
-            renderEcharts(name, counts)
+            console.log(data)
+            renderEcharts(data)
         }
     })
 
 
-    function renderEcharts(name, counts) {
+    function renderEcharts(data) {
         var myChart = echarts.init(document.getElementById('main'));
-        var option = {
-            title: {
-                text: '第一个 ECharts 实例'
+        option = {
+            title :{
+                show:true,
+                text:'DM5漫画分类详情',
+                textStyle:{
+                    color :'skyblue',
+                    fontSize:26,
+                    fontWeight:'normal',
+                }
             },
-            tooltip: {},
             legend: {
-                data: ['漫画分类']
+                top: 'bottom'
             },
-            xAxis: {
-                data: name
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
             },
-            yAxis: {},
-            series: [{
-                name: '总数',
-                type: 'bar',
-                data: counts
-            }]
+            series: [
+                {
+                    name: '面积模式',
+                    type: 'pie',
+                    radius: [50, 250],
+                    center: ['50%', '45%'],
+                    roseType: 'area',
+                    itemStyle: {
+                        borderRadius: 1
+                    },
+                    label:{
+                        show:true
+                    },
+                    data: data
+                }
+            ]
+                
+        
+        
         };
-        // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
     }
 </script>

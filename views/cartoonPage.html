@@ -16,9 +16,35 @@
         {{include "./include/side.html"}}
 
         <div class="layui-body">
-            <a href="/cartoonAddPage" class="layui-btn"
-                style="position: absolute; left: 10px; top: 10px; z-index: 999;">添加漫画</a>
+
             <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+                <div style='display:flex'>
+                    <a href="/cartoonAddPage" class="layui-btn" style='margin-right:100px'>添加漫画</a>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">keyword:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="title" id='keyword'  placeholder="title keyword"
+                                autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div style="position:relative">
+                            <label class="layui-form-label">status:</label>
+                            <div class="layui-input-inline" >
+                                <select id='selectStatus'>
+                                    <option value='' class="layui-btn layui-btn-xs " lay-event="edit">选择状态</option>
+                                    <option value='0' class="layui-btn layui-btn-xs " lay-event="edit">已发布</option>
+                                    <option value='1' class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">更新中</option>
+                                    <option value='2' class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">审核中</option>
+                                   <option  value='3' class="layui-btn layui-btn-xs layui-btn-danger" lay-event="edit">已下架</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="layui-btn layui-btn-normal" id='search' style='margin-right:100px'>search</a>
+                </div>
+              </script>
         </div>
 
         {{include "./include/footer.html"}}
@@ -197,6 +223,24 @@
                 })
             });
         }
+
+        $('body').on('click', '#search', function () {
+            let keyword = $('#keyword').val()
+            let selectStatus = $('#selectStatus').val()
+
+            table.reload('test', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    keyword,
+                    selectStatus
+                }
+            });
+            $('#keyword').val(keyword)
+            $('#selectStatus').val(selectStatus)
+        })
+
 
     });
 </script>
