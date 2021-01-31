@@ -11,7 +11,6 @@ var connection = mysql.createConnection({
 connection.connect(_ => {
     console.log('connect database success.');
 });
-
 // 查询分类表所有filed
 connection.queryCategoryAll = function () {
     let sql = 'select * from categoryTable'

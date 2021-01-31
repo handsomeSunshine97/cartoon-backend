@@ -11,7 +11,7 @@ app.use('/uploads', express.static('./uploads'))
 
 // request.body 中间件
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true  }))
 
 // art-template 三件套
 app.set('views', __dirname + '/views')
@@ -31,7 +31,7 @@ let options = {
 };
 
 app.use(session(options))
-//防止翻墙
+// 防止翻墙
 app.use(function (request, response, next) {
     let path = request.path
     let arr = ['/login', '/loginCheck','/loginOut']

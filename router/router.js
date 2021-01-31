@@ -55,4 +55,11 @@ router.post('/loginCheck', userController.postLoginCheck)
 
 router.get('/loginOut', userController.getLoginOut)
 
+router.get('/userInfo', userController.getUserInfo)
+
+router.post('/avatarUpload',upload.single('avatar'), userController.postAvatarUpload)
+
+router.post('/editUserInfo',upload.single('avatar'), userController.postEditUserInfo)
+
+
 module.exports = router

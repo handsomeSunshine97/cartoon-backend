@@ -1,0 +1,124 @@
+#mask{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color:rgba(0, 0, 0, 0.3);
+}
+
+#mask >#content{
+    position: fixed;
+    width: 400px;
+    height: 511px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color:white;
+    box-shadow: 0 0 6px #333;
+}
+
+#mask #content>p{
+    position: relative;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+#mask #content>p>i{
+    position: absolute;
+    top: 0;
+    right: 30px;
+    color: #9c9c9c;
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+#mask form>div{
+    overflow: hidden;
+    margin-top: 10px;
+    font-size: 12px;
+}
+#mask form>div>*{
+    margin: 0 30px;
+}
+#mask form>div:nth-child(1){
+    line-height: 48px;
+}
+#mask form>div>label{
+    float: left;
+    margin:0 0 0 30px;
+}
+#mask label{
+    display: inline-block;
+    width: 24px;
+    font-size: 12px;
+    color: #9c9c9c;
+}
+#mask input{
+    width: 264px;
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #9c9c9c;
+}
+#mask textarea{
+    width: 264px;
+    height: 60px;
+    padding: 5px 10px;
+   resize: none;
+   border: 1px solid #9c9c9c;
+}
+
+#mask form .avatar{
+    float: left;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+#mask form .avatar img{
+    width: 50px;
+    height: 50px;
+}
+#mask form .avatar{
+    position: relative;
+}
+#mask form .avatar >input{
+    position: absolute;
+    height: 50px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+#mask form>p{
+    margin-top: 50px;
+    text-align: center;
+}
+#mask form>p>button{
+    width: 80px;
+    height: 32px;
+    border: 1px solid #398dee;
+    font-size: 12px;
+    outline: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.primary{
+    background-color: #398dee;
+    color: white;
+    margin-right: 20px;
+}
+.cancel{
+    background-color: white;
+    color: #398dee;
+}
+.primary:hover{
+    background-color: #337ed5
+}
+.cancel:hover{
+    background-color: #f0f0f0;
+}
