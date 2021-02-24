@@ -4,10 +4,12 @@ const artTemplate = require('art-template')
 const express_artTemplate = require('express-art-template')
 const session = require('express-session')
 const router = require('./router/router.js')
+const apiRouter = require('./router/apiRouter.js')
 // 开放静态资源
 app.use('/layui', express.static('./public/layui'))
 app.use('/public', express.static('./public'))
 app.use('/uploads', express.static('./uploads'))
+
 
 // request.body 中间件
 app.use(express.json())
@@ -17,6 +19,12 @@ app.use(express.urlencoded({ extended: true  }))
 app.set('views', __dirname + '/views')
 app.engine('html', express_artTemplate)
 app.set('view engine', 'html')
+
+// 允许跨域请求
+app.use('/api',function(request,response,next){
+    response.setHeader('Access-Control-Allow-Origin','*')
+    next()  
+})
 
 let options = {
     name: "SESSIONID", // 待会写入到cookie中标识
@@ -31,6 +39,9 @@ let options = {
 };
 
 app.use(session(options))
+// 前端路由
+app.use('/api',apiRouter)
+
 // 防止翻墙
 app.use(function (request, response, next) {
     let path = request.path
@@ -46,10 +57,7 @@ app.use(function (request, response, next) {
     }
 })
 
-
 // 路由中间件
 app.use(router)
-
-
 
 app.listen(6898, _ => console.log('running...'))
